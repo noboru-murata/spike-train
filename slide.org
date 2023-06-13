@@ -1,0 +1,897 @@
+#+TITLE: Estimation of Neural Connections from Multiple Spike Trains
+#+SUBTITLE: graph structure inference with nuisance inputs
+#+AUTHOR: Noboru Murata
+#+EMAIL: noboru.murata@gmail.com
+#+DATE: \today
+#+DESCRIPTION: based on N. Murata & Amari 1999, doi:10.1016/S0165-1684(98)00206-0
+#+KEYWORDS: multiple spike trains, stochastic modeling, graph inference
+#+LANGUAGE: en
+#+STARTUP: beamer hidestars content indent
+:BEAMER:
+#+OPTIONS: H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+# #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:https://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+HTML_LINK_UP:
+#+HTML_LINK_HOME:
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [fleqn,aspectratio=1610]
+#+BEAMER_HEADER: \usepackage[toc=none]{mytalk}
+# #+BEAMER_HEADER: \usepackage[toc=none,font=heavy]{mytalk}
+#+BEAMER_HEADER: \addbibresource{papers.bib}
+#+BEAMER_HEADER: \graphicspath{{figs/},{figs/pnas/},{refs/}}
+#+BEAMER_HEADER: \DeclareGraphicsExtensions{.pdf,.png,.eps,.jpg}
+#+BEAMER_HEADER: \institute{\url{https://noboru-murata.github.io/}}
+# #+BEAMER_HEADER: \institute[WASEDA]{Waseda University\\\url{https://noboru-murata.github.io/}}
+# #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{symbol_waseda_3.jpg}
+# #+BEAMER_HEADER:    \includegraphics[height=1.5cm,viewport=0 0 150 150,clip]{UTlogo.jpg}
+# #+BEAMER_HEADER:    \includegraphics[height=1.5cm]{nict-logo-new2.png}}
+# #+BEAMER_HEADER: \myLogo{\lower9pt\hbox{
+# #+BEAMER_HEADER:    \reflectbox{\includegraphics[height=26pt]{milk_gray.png}}
+# #+BEAMER_HEADER:    \kern-8pt\includegraphics[height=18pt,width=22pt]{milk_sepia.png}}}
+#+COLUMNS: "%45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)"
+# column view: C-c C-x C-c / C-c C-c or q
+# beamer block: C-c C-b
+:END:
+
+* Introduction
+*** Background
+# plasticity of brain: inportant function
+# survive ever-changing world environment
+# estimating transition of neural connections:
+- estimating neural connections
+  # fundamental problem in order to 
+  - understand functions of biological systems
+  - investigate learning/adaptation mechanisms
+
+#+BEAMER: \smallskip
+- typical methods for measuring brain activities
+  # rescent development offer various kinds of data:
+  # wide range of available data:
+  - fMRI
+    (functional magnetic resonance imaging)
+  - MEG
+    (magnetoencephalography)
+  - EEG
+    (electroencephalography)
+    # - NIRS 
+    #   (near-infrared spectroscopy)
+    #   Functional near-infrared spectroscopy
+  - TPE
+    (two-photon excitation microscopy)
+    # with Fluorophore
+  - *multi-electrode recording*
+    # (individual neuron firing)
+  
+#+BEAMER: \smallskip
+- different resolutions in
+  - time (oxygen consumption - neuron firing)
+  - space (brain mapping - synaptic connections)
+  # macro scopic -   brain mapping
+  # micro scopic -   synaptic connections
+
+*** Multi-Electrode Recording
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\includegraphics[width=\linewidth]{electrode}
+#+begin_quote
+#+BEAMER: \tiny
+by courtesy of Dr. Tatsuno
+at University of Lethbridge
+#+end_quote
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+# a rather classical method
+# probes are placed on the surface of cortex
+# they can directly measure neurons' activity
+# (membrance potentials) 
+activities of individual neurons
+# spikes from individual neurons
+# rescent development allows us 
+- multiple neurons\\
+  (tens - hundreds)
+  # to measure simultaneously
+- long term measurement\\
+  (several hours - several days)
+  # to measure continuously
+# \footcite{TatsunoLipaMcNaughton2006}
+
+*** Spike Trains
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+begin_export latex
+\centering
+multi-variate stochastic process\\[5pt]
+\rotatebox{90}{\hspace*{.2\linewidth}neurons}
+\includegraphics[width=.9\linewidth]{spiketrain}\\
+times
+#+end_export
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+# foranalizing neural connections
+# measured activities are usually
+rearranged as binary sequence
+indicating states of neurons
+- 0: resting
+- 1: firing
+#+BEAMER: \bigskip
+# dependency of
+multi-variate binary time series contains
+information of neural interactions
+
+*** Graph Structure Inference
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_center
+\includegraphics[width=.4\linewidth]{synapse}
+\(\displaystyle\leftrightarrows\atop\strut\)
+\includegraphics[width=.25\linewidth]{edge}\\
+\includegraphics[width=.8\linewidth]{graph}
+#+end_center
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+# in order to analyze those interactions
+# we usually adopt directed graph
+# as mathematical representation
+mathematical representation -- \\
+directed graph
+- node: neuron
+- edge: synaptic connection
+#+BEAMER: \bigskip
+***** Objective                                            :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+# our objective is summarized as
+estimate weights of edges
+from binary time series at nodes
+
+*** Prior Works
+# for analyzing graph-structured data
+# there are various methods are proposed so far
+# existing methods/various analysis
+typical methods for analysis
+- pair-wise:
+  # focus on relation of two nodes
+  # each relation of a pair
+  # pair-wise neuronal correlation analysis
+  - cross-correlation
+    # function
+    (e.g. \cite{WilsonMcNaughton1994})
+  - joint peri-stimulus time histogram
+    (e.g. \cite{ItoTsuji2000})
+- graph-based:
+  # consider many nodes simultaneously
+  # relations of pairs simultaneously
+  - sparse inverse covariance matrix
+    (e.g. \cite{FriedmanHastieTibshirani2008})
+    # e.g. glasso
+    # multi-variate Gaussian
+  - digraph Laplacian
+    (e.g. \cite{Noda_etal2014})
+- higher-order:
+  # consider relations among 3, 4, and more nodes 
+  - information geometric measure
+    (e.g. \cites{NakaharaAmari2002,TatsunoFellousAmari2009})
+    # NieTatsuno2012
+  - Granger causality
+    (e.g. \cite{Kim_etal2011})
+# each method has advantages and disadvantages
+# e.g. SICS can deal with hundreds of node,
+# but only consider undirected
+
+*** Issues to Be Solved
+# in analysis, we have some issues to be considered/solved
+# our main consern is pseudo correlation problem
+- pseudo correlation caused by higher-order effects
+- influence from unobserved neurons
+- directed excitatory/inhibitory connections
+
+*** Pseudo Correlation
+correlation coefficient:
+statistics for analyzing relation of two random variables
+#+BEAMER: \medskip
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_opt: t
+:END:
+\centering
+connections @@latex:\\[4pt]@@
+\includegraphics[width=.6\linewidth]{connection}
+# consider nodes i and j in small direted graph
+# phisycal connections are shown in fig
+- no direct relation exists
+- two nodes are connected with the same node
+\pause
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_opt: t
+:END:
+\centering
+pseudo-correlation @@latex:\\[4pt]@@
+\includegraphics[width=.6\linewidth]{pseudoconnection}
+# if we think correlation coefficient of i and j
+- spurious relation appears
+**** Pseudo correlation                                     :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:BEAMER_act: <3>
+:END:
+# \pause
+# \begin{alertblock}{pseudo correlation}
+a common problem in complex network analysis
+# \end{alertblock}
+# \bigskip
+# pseudo correlation: a common problem in complex network analysis
+# there are several attempts to overcome those problems
+# roughly speaking
+# graph-based/higher-order methods are proposed
+# for overcome pseudo correlation problems
+
+*** Delayed Pseudo-Correlation
+delayed correlation coefficient:
+statistics for analyzing time series
+# / dynamical systems
+#+BEAMER: \medskip
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_opt: t
+:END:
+\centering
+\includegraphics[width=.7\linewidth]{longterm}\\
+\includegraphics[width=.5\linewidth]{longtermeffect}
+- appropriate intervals have to be considered
+- information propagates multiple paths
+- spurious relation appears
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_opt: t
+:END:
+\centering
+#+begin_export latex
+\visible<2->{\includegraphics[width=.7\linewidth]{shortterm}\\
+\includegraphics[width=.25\linewidth]{shorttermeffect}}
+#+end_export
+- <2-> consider short intervals?
+#+begin_export latex
+\visible<3>{\includegraphics[width=.6\linewidth]{isi}}
+#+end_export
+- <3-> spike intervals are random 
+# conventional methods do not consider
+# difficult to avoid in their framework?
+
+*** COMMENT Problems in Other Methods
+- directional excitatory/inhibitory connections
+  - \xmark :: multi-variate Gaussian
+  - \xmark :: exponential fam
+  - \xmark :: digraph Laplacian (only consider directional)
+
+- unobserved neurons 
+  - \xmark :: not explicitly considered
+
+*** Our Contribution
+a mathematical framework for treating
+# following one major and two minor pnroblems
+- pseudo correlation caused by higher-order effects
+  # :\\
+  # graph expansion
+- influence from unobserved neurons
+  # :\\
+  # conditional expectation
+- directed excitatory/inhibitory connections
+  # :\\
+  # em algorithm
+
+#+BEAMER: \pause
+#+BEAMER: \bigskip
+**** Main contribution                                      :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+solve those problems with simple mathematical tricks
+
+
+* Problem Formulation
+*** Notations
+- indeces
+  - \(i\in\{1,2,\dotsc,N\}\):
+    index of neurons
+  - \(t\in\{1,2,\dotsc,T\}\):
+    discrete time of measurement
+  - \(t_{\Delta}=[t-\Delta,\dotsc,t-1]\):
+    # time
+    interval for delayed correlation
+- states
+  - \(X_{i}(t)\in\{0,1\}\):
+    state of neuron \(i\) at time \(t\)
+  - \(X_{i}[t_{\Delta}]\in\{0,1\}\):
+    state of neuron \(i\) in interval \(t_{\Delta}\)
+  - \(U_{i}(t)\in\mathbb{R}\):
+    internal state of neuron \(i\) at time \(t\)
+- connections
+  - \(w_{ij}\in\mathbb{R}\):
+    synaptic connection from neuron \(j\) to neuron \(i\)
+  - \(\lambda_{ij}\in\mathbb{R}\):
+    pseudo connection from neuron \(j\) to neuron \(i\)
+*** Internal State
+weighted sum of inputs from unobserved/observed neurons:
+\begin{align}
+  &U_i(t)
+    = B_i(t) + \sum_{j=1}^{N} \lambda_{ij} X_j[t_\Delta],\\
+  &\qquad B_{i}(t): \text{nuisance inputs from unobserved neurons}\\
+  &\qquad \lambda_{ij}: \text{\alert{pseudo connection} including
+    undirect paths}
+\end{align}
+#+begin_center
+\includegraphics[width=.45\linewidth]{longterm}
+@@latex:\hspace*{.05\linewidth}@@
+\includegraphics[width=.25\linewidth]{longtermeffect}
+#+end_center
+# activity in interval may affect 
+**** Remarks                                                :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+- signal from neuron \(j\) has several paths
+- \(\lambda_{ij}\) includes direct and undirect connections
+
+
+*** Neuron Firing
+stochastic dependency on internal state:
+# probabilistic depending on internal state:
+# subject to probit model of internal state:
+# probit model
+\begin{align}
+  &\Pr\bigl(X_i(t)=1\bigr)
+    = \Phi_{\sigma^{2}}\bigl(U_i(t)\bigr),\\
+  % &\qquad
+  %   \phi_{\sigma^2}(z)
+  %   =\frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Bigl(-\frac{z^2}{2\sigma^2}\Bigr)},\\
+  &\qquad
+    \Phi_{\sigma^{2}}: \text{cdf of }\mathcal{N}(0,\sigma^{2}).
+\end{align}
+**** Model assumption                                 :B_alertblock:BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:BEAMER_env: alertblock
+:END:
+- we assume a probit model
+- \(\Phi_{\sigma^{2}}\) is the integral of
+  \begin{equation}
+    \phi_{\sigma^2}(z)
+    =\frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Bigl(-\frac{z^2}{2\sigma^2}\Bigr)}
+  \end{equation}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+\centering
+\small
+#+begin_export latex
+\rotatebox{90}{\hspace*{15pt}firing probability}
+#+end_export
+\includegraphics[width=.9\linewidth]{probit}\\
+internal state
+
+*** Model Description
+internal state:
+\begin{align}
+  &U_i(t)
+    = B_i(t) + \sum_{j=1}^{N} \lambda_{ij} X_j[t_\Delta],\\
+  &\qquad B_{i}(t): \text{nuisance inputs},\\
+  &\qquad \lambda_{ij}: \text{pseudo connection}.
+\end{align}
+neuron firing:
+# probit model
+\begin{align}
+  &\Pr\bigl(X_i(t)=1\bigr)
+    = \Phi_{\sigma^{2}}\bigl(U_i(t)\bigr),\\
+  &\qquad
+    \phi_{\sigma^2}(z)
+    =\frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Bigl(-\frac{z^2}{2\sigma^2}\Bigr)},\\
+  &\qquad
+    \Phi_{\sigma^{2}}:
+    \text{cdf of \(\mathcal{N}(0,\sigma^{2})\),
+    integral of \(\phi_{\sigma^2}\).}
+\end{align}
+
+*** Removal of Nuisance Effect
+**** First step                                                  :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+remove nuisance input \(B\) and estimate pseudo connection \(\lambda\)
+\begin{align}
+  U_i(t)
+  &= \alert{B_i(t)} +
+    \sum_{j=1}^{N} \alert{\lambda_{ij}} X_j[t_\Delta].
+\end{align}
+**** bottom                                              :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+\centering
+\includegraphics[width=.6\linewidth]{partialgraph}
+
+*** Property of Sum of Random Variables
+****                                                           :B_theorem:
+:PROPERTIES:
+:BEAMER_env: theorem
+:END:
+Let \(X\) and \(Y\) be independent random variables.
+For any function \(g\), we have
+\begin{align}
+  \mathbb{E}[g(X+Y)]
+  &= \mathbb{E}\bigl[h\bigl(X+\mathbb{E}[Y]\bigr)\bigr],\\
+  \intertext{where \(f_{Y}\) is the pdf of \(Y\) and}
+  f^{-}_{Y}(x) &= f_Y(\mathbb{E}[Y]-x),\\
+  h &= g*f^{-}_{Y}.
+\end{align}
+**** notes                                               :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+A special case is discussed in \cite{Hyvaerinen2002}.
+
+*** Special Case of Gaussian
+****                                                         :B_corollary:
+:PROPERTIES:
+:BEAMER_env: corollary
+:END:
+If the function \(g\) is \(\Phi_{\sigma^{2}}\)
+and random variable \(X\) is constant value \(x\),
+and probability density function \(f_Y\) is Gaussian
+with mean \(\mathbb{E}[Y]\) and variance \(\tau^{2}\), we have
+\begin{align}
+  \mathbb{E}[\Phi_{\sigma^{2}}(x+Y)]
+  &=\Phi_{\sigma^{2}+\tau^{2}}\bigl(x+\mathbb{E}[Y]\bigr).
+\end{align}
+**** notes                                               :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+begin_center
+\(\Phi_{\sigma^{2}}\)\hspace{.23\linewidth}
+\(\phi_{\tau^{2}}\)\hspace{.2\linewidth}
+\(\Phi_{\sigma^{2}\!+\!\tau^{2}}\)
+\includegraphics[width=.8\linewidth]{convolution}    
+#+end_center
+
+*** Conditinal Expectation of State
+consider the case of \(X_j[t_{\Delta}]\!=\!1\):
+\begin{align}
+  U_{i}(t\mid X_j[t_{\Delta}]\!=\!1)
+  &= B_i(t) + \lambda_{ij}X_j[t_{\Delta}] +
+    \sum_{k \neq j}\lambda_{ik}X_k[t_{\Delta}]\\
+  &= \lambda_{ij} + C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1\bigr).
+\end{align}
+
+\pause
+apply the corollary for calculating conditional expectation:
+\begin{align}
+  \mathbb{E}\bigl[X_i(t) \mid X_j[t_{\Delta}]\!=\!1\bigr]
+  &= \mathbb{E}\bigl[\Phi_{\sigma^2}\bigl(U_{i}(t\mid X_j[t_{\Delta}]\!=\!1)\bigr)\bigr]\\
+  &= \mathbb{E}\bigl[\Phi_{\sigma^2}\bigl(\lambda_{ij} +
+    C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1)\bigr)\bigr]\\
+    % \mathbb{E}\bigl[\Phi_{\sigma^2}\bigl(\lambda_{ij} + C_{ij}(t)\bigr)\bigr]
+  &= \Phi_{\rho^2}(\lambda_{ij} + \bar{C}_{ij}),
+\end{align}
+where we assume \(C_{ij}\sim\mathcal{N}(\bar{C}_{ij},\tau^{2})\)
+and \(\rho^2 = \sigma^2+\tau^2\).
+
+*** Conditional Expectation of Internal State
+for binary random variables, %the following holds:
+\begin{align}
+  \mathbb{E}\bigl[X_i(t) \mid X_j[t_{\Delta}]\!=\!1\bigr]
+  = \Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1).
+\end{align}
+holds,
+therefore, obtain:
+\begin{align}
+  \Phi_{\rho^2}(\lambda_{ij} + \bar{C}_{ij})
+  &= \Pr(X_i(t)=1 \mid X_j[t_{\Delta}]\!=\!1),\\
+  \Leftrightarrow\quad
+  \lambda_{ij} + \bar{C}_{ij}
+  &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)\bigr).
+\end{align}
+
+*** Difference of Conditional Expectation
+consider the both cases of \(X_j[t_{\Delta}]=1\) and \(X_j[t_{\Delta}]=0\):
+\begin{align}
+  U_{i}(t\mid X_j[t_{\Delta}]\!=\!1)
+  &= \lambda_{ij} +
+    C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1),\\
+  U_{i}(t\mid X_j[t_{\Delta}]\!=\!0)
+  &= \phantom{\lambda_{ij} + {}}
+    C_{ij}(t\mid X_j[t_{\Delta}]\!=\!0).
+\end{align}
+#+BEAMER: \pause
+**** Assumption                                             :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+# \(C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1)\) and
+# \(C_{ij}(t\mid X_j[t_{\Delta}]\!=\!0)\) obey the same distribution
+\begin{equation}
+  C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1),
+  C_{ij}(t\mid X_j[t_{\Delta}]\!=\!0)
+  \sim\mathcal{N}(\bar{C}_{ij},\tau^{2})
+\end{equation}
+# \(C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1),
+# C_{ij}(t\mid X_j[t_{\Delta}]\!=\!0)
+# \sim\mathcal{N}(\bar{C}_{ij},\tau^{2})\)
+**** bottom                                              :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+BEAMER: \pause
+then obtain:
+\begin{align}
+  \lambda_{ij} + \bar{C}_{ij}
+  &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)\bigr),\\
+  %%\phantom{\lambda_{ij} +}
+  \bar{C}_{ij}
+  &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)\bigr).
+\end{align}
+
+*** Estimation of Pseudo Connection
+estimator of pseudo connection:
+\begin{align}
+  \lambda_{ij}
+  &=\rho\bigl\{\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)\bigr)\\
+  &\qquad\qquad
+    - \Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)\bigr)
+    \bigr\}.
+\end{align}
+empirical estimates of conditional probability:
+\begin{align}
+  \Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)
+  &= \frac{1}{Z}\sum_{t} X_i(t \mid X_j[t_\Delta]\!=\!1),\\
+  \Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)
+  &= \frac{1}{Z'}\sum_{t} X_i(t \mid X_j[t_\Delta]\!=\!0).
+\end{align}
+
+*** Decomposition of Pseudo Connection
+**** Second step                                                 :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+decompose pseudo connections \(\lambda\)
+with direct connections \(w\):\\
+\centering
+\includegraphics[width=.9\linewidth]{decomposition}
+**** bottom                                              :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+\pause
+consider an expansion with appropriate \(\delta,\delta'\) (delay time)
+\begin{align}
+  \lambda_{ij}
+  &=w_{ij}\\
+  %&+\sum_{k}w_{ik}\alert{\Pr(X_k(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1)}\\
+  &+\sum_{k}\!w_{ik}\alert{\Pr(X_k(t\!-\!\delta)\!=\!1 \mid X_j(t\!-\!\delta')\!=\!1)}\\
+  % &+\sum_{k,l}\!w_{ik}\alert{\Pr(X_k(t)=1 \mid X_l(t-{\delta})=1)}\\
+  % &\phantom{+\sum_{k,l}\!w_{ik}}\times
+  %   \alert{\Pr(X_l(t-\delta)=1 \mid X_j(t-2\delta)=1)}\\
+  &+\text{(higher order terms)}.
+\end{align}
+
+*** Decomposition
+
+introducing a virtual probability with an appropriate interval \(t_{\delta}\)
+\begin{equation}
+  \theta_{ij}
+  = \Pr(X_i(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1),
+\end{equation}
+obtain an expansion of \(\lambda\) as:
+\begin{align}
+  \lambda_{ij}
+  &=w_{ij}+
+    \sum_k\!w_{ik}\theta_{kj}+
+    \sum_{k,l}\!w_{ik}\theta_{kl}\theta_{lj}+
+    \sum_{k,l,m}\!w_{ik}\theta_{kl}\theta_{lm}\theta_{mj}+
+    \dotsb.
+\end{align}
+#+BEAMER: \pause
+this expression gives a simple matrix form:
+\begin{align}
+  \Lambda
+  &= W(I+\Theta+\Theta^{2}+\Theta^{3}+\cdots)
+  &&\text{\triangleright\,Neumann series}\\
+  &= W(I-\Theta)^{-1},
+\end{align}
+where \(W=(w_{ij})\) and \(\Theta=(\theta_{ij})\).
+
+*** Estimation of Virtual Probability
+relation between \(\theta\) and \(w\):
+\begin{align}
+  \theta_{ij}
+  &= \Pr(X_i(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1)
+  &&\text{\triangleright\,use expectation form}\\
+  &= \mathbb{E}\bigl[\Phi_{\sigma^{2}}(w_{ij}+C_{ij}')\bigr]
+  &&\text{\triangleright\,\(t_{\delta}\) is small enough}\\
+     %to exclude undirect effect.
+  &= \Phi_{\rho^2}\bigl(w_{ij}+\mathbb{E}[C'_{ij}]\bigr)
+  &&\text{\triangleright\,by the corollary}
+\end{align}
+#+BEAMER: \pause
+**** Assumption                                             :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+\begin{equation}
+  C_{ij}'\sim\mathcal{N}(\bar{C}_{ij},\tau^{2})
+\end{equation}
+**** bottom                                              :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+BEAMER: \pause
+# we can
+calculate \(\theta\) by using \(w\) as:
+\begin{align}
+  \theta_{ij}
+  &=\Phi_{\rho^2}(w_{ij}+\bar{C}_{ij}),\\
+    %\mathbb{E}[C'_{ij}]
+  \bar{C}_{ij}
+  &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)\bigr).
+\end{align}
+
+*** Estimation of Neuron Type
+**** Third step                                                  :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+estimate types of neurons consistent with data:
+- excitatory neurons - \alert{positive connections only}
+- inhibitory neurons - \alert{negative connections only}
+**** skip                                                :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+BEAMER: \pause
+#+BEAMER: \medskip
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\centering
+#+BEAMER: \visible<3->{\includegraphics[width=.8\linewidth]{emalgorithm}\\}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+treated as hidden variables \(\boldsymbol{z}\in\{0,1\}^{N}\):
+\begin{equation}
+  \Pr(\text{Data}\mid W,\boldsymbol{z})
+  \Leftrightarrow
+  \Pr(\boldsymbol{z}\mid\text{Data},W)
+\end{equation}
+# connections are limited positive/negative
+**** bottom                                              :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+BEAMER: \pause
+#+BEAMER: \smallskip
+use em algorithm
+\parencite{Amari1995}\\
+with approximations:
+- factorial model in data manifold
+- Gibbs sampling
+
+*** 
+# algorithm
+#+begin_export latex
+\footnotesize
+\alert{Proposed Algorithm:}
+\begin{algorithmic}[1]
+  \State{Input:\;$\Lambda, \bar{C}, \boldsymbol{z}$}
+  \Function{estimateW}{$\Lambda, \bar{C}, \boldsymbol{z}$}
+  \State{Initialization:\;
+    $\Theta^{(1)}\gets[0,1]^{N\times N}$,
+    $\Lambda^{(1)}\gets\Lambda$}
+  \For{$\tau\gets1,T$}
+  \State{$W^{(\tau+1)}\gets
+    {\Lambda}^{(\tau)}(I-\Theta^{(\tau)})$}
+  \For{$i\gets1,N$}
+  \For{$j\gets1,N$}
+  \State{
+    $[\hat{W}(\boldsymbol{z})^{(\tau+1)}]_{ij}
+    \gets
+    \begin{cases}
+      z_{j}[W^{(\tau+1)}]_{ij},&[W^{(\tau+1)}]_{ij} > 0\\
+      (1-z_{j})[W^{(\tau+1)}]_{ij},&[W^{(\tau+1)}]_{ij} < 0
+    \end{cases}
+    $
+  }
+  \EndFor
+  \EndFor
+  \State{$\bigl[\Theta^{(\tau+1)}\bigr]_{ij}\gets
+    \Phi_1\Bigl([\hat{W}(\boldsymbol{z})^{(\tau+1)}]_{ij}+\bar{C}_{ij})\Bigr)$}
+  \State{$\mathrm{diag}(\boldsymbol{\Theta}^{(\tau+1)})\gets 0$}
+  \Comment{update diagonal elements}
+  \State{$\Lambda^{(\tau+1)}\gets\Lambda^{(\tau)}$}
+  \State{$\mathrm{diag}\bigl(\Lambda^{(\tau+1)}\bigr)\gets
+    \mathrm{diag}\bigl(\Lambda^{(\tau)}\Theta^{(\tau+1)}\bigr)$}
+  \Comment{update diagonal elements}
+  \EndFor
+  \EndFunction
+  \State{Output:\;$\hat{W}(\boldsymbol{z})$}
+\end{algorithmic}
+#+end_export
+
+* Numerical Examples
+** synthetic data analysis
+*** Synthetic Data Analysis
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\centering
+\includegraphics[width=.7\linewidth]{experiment}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+Izhikevich's neuron model\\
+\parencite{Izhikevich2003}
+- \(N=33\) out of \(100\) neurons
+- excitatory:inhibitory = 80\%:20\%
+- \(w_{ij}\sim\texttt{Unif}[-10,10]\)
+- \(\#\{w_{\cdot i}\}\leq 10\)
+\centering
+\includegraphics[width=.8\linewidth]{spiketrain}
+*** Estimation Result
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\centering
+true\\
+\includegraphics[width=.8\linewidth]{graph_cor}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\centering
+estimated\\
+\includegraphics[width=.8\linewidth]{graph_est}
+**** remarks                                                :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+- estimation is scale indeterminate
+- inhibitory connections are difficult to estimate
+
+*** Performance
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\centering
+sensitivity
+\includegraphics[width=.8\linewidth]{fig_100net1}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+\centering
+Kendall coefficient
+\includegraphics[width=.8\linewidth]{fig_100net2}
+**** remarks                                                :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+- estimation accuracy gets better if neuron types are given
+- order of weights %strength
+  is estimated with sufficient accuracy
+
+*** Sensitivity vs Interval Size
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+      \centering
+      sensitivity
+      \includegraphics[width=.8\linewidth]{fig_100net}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+      \centering
+      spike interval
+      \includegraphics[width=.8\linewidth]{isi}
+**** remark                                                 :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+    - sensitivity is affected by choice of
+      correlation interval
+** real data analysis
+*** Real Data Analysis
+memory trace replay:
+\parencites{WilsonMcNaughton1994,TatsunoLipaMcNaughton2006}
+# \parencites{WilsonMcNaughton1994,TatsunoLipaMcNaughton2006}
+- purpose: 
+  examine the hyposesis ``the replay of activity patterns during sleep 
+  plays an important role in the consolidation process of memory''
+- measurements:
+  - pre-task: activity of control
+  - task: activity in learning stage
+  - post-task: activity in non-REM stage
+
+*** Estimation Result
+**** left                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.33
+:END:
+\centering
+pre-task @@latex:\\[10pt]@@
+\includegraphics[width=.9\linewidth,trim=94 87 66 73,clip]{rslt_Rat8000_Seq_pre}
+**** middle                                                        :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.33
+:END:
+\centering
+task @@latex:\\[10pt]@@
+\includegraphics[width=.9\linewidth,trim=94 87 66 73,clip]{rslt_Rat8000_Seq_task}
+**** right                                                         :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.33
+:END:
+\centering
+post-task @@latex:\\[10pt]@@
+\includegraphics[width=.9\linewidth,trim=94 87 66 73,clip]{rslt_Rat8000_Seq_post}
+**** remarks                                                :B_alertblock:
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+- some connections changed at task period are retained at
+  post-task period (e.g. 8,11,12,20)
+- result should be discussed from the viewpoint of biology
+  # - this is on-going work
+  # - the number of connections should be reduced with 
+
+* Conclusion
+*** Concluding Remarks
+we consider an approach to solve the following problems
+- pseudo correlation caused by higher-order effect
+- influence from unobserved neurons
+- directional excitatory/inhibitory connections
+
+possible extension would be
+- estimating the number of connections
+- estimating activation functions of individual neurons
+- applying other real-world data
+
+*** References
+:PROPERTIES:
+:BEAMER_opt: allowframebreaks
+:END:
+\printbibliography[heading=none]
+
+
+* COMMENT File Local Variables
+# Local Variables:
+# End:
+    
