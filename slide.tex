@@ -1,4 +1,4 @@
-% Created 2023-06-13 Tue 16:33
+% Created 2023-06-14 Wed 12:30
 % Intended LaTeX compiler: pdflatex
 \documentclass[fleqn,aspectratio=1610]{beamer}
 \author{Noboru Murata}
@@ -15,7 +15,7 @@
  pdftitle={Estimation of Neural Connections from Multiple Spike Trains},
  pdfkeywords={multiple spike trains, stochastic modeling, graph inference},
  pdfsubject={based on N. Murata \& Amari 1999, https://doi.org/10.1016/S0165-1684(98)00206-0},
- pdfcreator={Emacs 28.2 (Org mode 9.6.4)}, 
+ pdfcreator={Emacs 28.2 (Org mode 9.6)}, 
  pdflang={English}}
 \begin{document}
 
@@ -26,8 +26,8 @@
 
 
 \section{Introduction}
-\label{sec:org546c1d2}
-\begin{frame}[label={sec:org5b90ce3}]{Background}
+\label{sec:org2424534}
+\begin{frame}[label={sec:orgb774e41}]{Background}
 \begin{itemize}
 \item estimating neural connections
 
@@ -64,7 +64,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orged4c03f}]{Multi-Electrode Recording}
+\begin{frame}[label={sec:orgebf69b9}]{Multi-Electrode Recording}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \includegraphics[width=\linewidth]{electrode}
@@ -87,7 +87,7 @@ activities of individual neurons
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgcb88e45}]{Spike Trains}
+\begin{frame}[label={sec:org4c3b2e1}]{Spike Trains}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \centering
@@ -111,7 +111,7 @@ information of neural interactions
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9359687}]{Graph Structure Inference}
+\begin{frame}[label={sec:orgcb004dd}]{Graph Structure Inference}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{center}
@@ -137,7 +137,7 @@ from binary time series at nodes
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9f71fc4}]{Prior Works}
+\begin{frame}[label={sec:orgbaeab31}]{Prior Works}
 typical methods for analysis
 \begin{itemize}
 \item pair-wise:
@@ -168,7 +168,7 @@ typical methods for analysis
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgb4ef165}]{Issues to Be Solved}
+\begin{frame}[label={sec:org70a887d}]{Issues to Be Solved}
 \begin{itemize}
 \item pseudo correlation caused by higher-order effects
 \item influence from unobserved neurons
@@ -176,7 +176,7 @@ typical methods for analysis
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org920f6f8}]{Pseudo Correlation}
+\begin{frame}[label={sec:org04bccce}]{Pseudo Correlation}
 correlation coefficient:
 statistics for analyzing relation of two random variables
 \medskip
@@ -207,7 +207,7 @@ a common problem in complex network analysis
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:orgdda945e}]{Delayed Pseudo-Correlation}
+\begin{frame}[label={sec:org9fdea08}]{Delayed Pseudo-Correlation}
 delayed correlation coefficient:
 statistics for analyzing time series
 
@@ -238,7 +238,7 @@ statistics for analyzing time series
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6787a56}]{Our Contribution}
+\begin{frame}[label={sec:org1673bf2}]{Our Contribution}
 a mathematical framework for treating
 
 \begin{itemize}
@@ -256,8 +256,8 @@ solve those problems with simple mathematical tricks
 
 
 \section{Problem Formulation}
-\label{sec:orgcc485eb}
-\begin{frame}[label={sec:org6d354a2}]{Notations}
+\label{sec:orgaf61d78}
+\begin{frame}[label={sec:org94457ae}]{Notations}
 \begin{itemize}
 \item indeces
 \begin{itemize}
@@ -287,20 +287,26 @@ pseudo connection from neuron \(j\) to neuron \(i\)
 \end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org82957d8}]{Internal State}
-weighted sum of inputs from unobserved/observed neurons:
+\begin{frame}[label={sec:org578448c}]{Internal State}
+weighted sum of inputs from unobserved/observed neurons
+\begin{columns}
+\begin{column}{0.7\columnwidth}
 \begin{align}
   &U_i(t)
     = B_i(t) + \sum_{j=1}^{N} \lambda_{ij} X_j[t_\Delta],\\
-  &\qquad B_{i}(t): \text{nuisance inputs from unobserved neurons}\\
-  &\qquad \lambda_{ij}: \text{\alert{pseudo connection} including
+  &\quad B_{i}(t): \text{nuisance inputs from unobserved neurons}\\
+  &\quad \lambda_{ij}: \text{\alert{pseudo connection} including
     undirect paths}
 \end{align}
+\end{column}
+\begin{column}{0.3\columnwidth}
 \begin{center}
-\includegraphics[width=.45\linewidth]{longterm}
-\hspace*{.05\linewidth}
-\includegraphics[width=.25\linewidth]{longtermeffect}
+\includegraphics[width=\linewidth]{longterm}
+\\[10pt]
+\includegraphics[width=\linewidth]{longtermeffect}
 \end{center}
+\end{column}
+\end{columns}
 \begin{alertblock}{Remarks}
 \begin{itemize}
 \item signal from neuron \(j\) has several paths
@@ -309,10 +315,10 @@ weighted sum of inputs from unobserved/observed neurons:
 \end{alertblock}
 \end{frame}
 
-
-\begin{frame}[label={sec:org7b5ff49}]{Neuron Firing}
+\begin{frame}[label={sec:org44a8426}]{Neuron Firing}
 stochastic dependency on internal state:
-
+\begin{columns}
+\begin{column}{0.65\columnwidth}
 \begin{align}
   &\Pr\bigl(X_i(t)=1\bigr)
     = \Phi_{\sigma^{2}}\bigl(U_i(t)\bigr),\\
@@ -322,39 +328,37 @@ stochastic dependency on internal state:
   &\qquad
     \Phi_{\sigma^{2}}: \text{cdf of }\mathcal{N}(0,\sigma^{2}).
 \end{align}
-\begin{columns}
-\begin{column}{0.6\columnwidth}
-\begin{alertblock}{Model assumption}
+\end{column}
+\begin{column}{0.35\columnwidth}
+\centering
+\footnotesize
+\rotatebox{90}{\hspace*{15pt}firing probability}
+\includegraphics[width=.9\linewidth]{probit}\\[0pt]
+internal state
+\end{column}
+\end{columns}
+
+\begin{alertblock}{Assumption}
 \begin{itemize}
-\item we assume a probit model
-\item \(\Phi_{\sigma^{2}}\) is the integral of
+\item we assume a probit model, where \(\Phi_{\sigma^{2}}\) is the integral of
 \begin{equation}
   \phi_{\sigma^2}(z)
   =\frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Bigl(-\frac{z^2}{2\sigma^2}\Bigr)}
 \end{equation}
 \end{itemize}
 \end{alertblock}
-\end{column}
-\begin{column}{0.4\columnwidth}
-\centering
-\small
-\rotatebox{90}{\hspace*{15pt}firing probability}
-\includegraphics[width=.9\linewidth]{probit}\\[0pt]
-internal state
-\end{column}
-\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org64f0a7e}]{Model Description}
-internal state:
+\begin{frame}[label={sec:orgc733c14}]{Model Description}
+\begin{itemize}
+\item internal state
 \begin{align}
   &U_i(t)
     = B_i(t) + \sum_{j=1}^{N} \lambda_{ij} X_j[t_\Delta],\\
   &\qquad B_{i}(t): \text{nuisance inputs},\\
   &\qquad \lambda_{ij}: \text{pseudo connection}.
 \end{align}
-neuron firing:
-
+\item neuron firing
 \begin{align}
   &\Pr\bigl(X_i(t)=1\bigr)
     = \Phi_{\sigma^{2}}\bigl(U_i(t)\bigr),\\
@@ -366,23 +370,28 @@ neuron firing:
     \text{cdf of \(\mathcal{N}(0,\sigma^{2})\),
     integral of \(\phi_{\sigma^2}\).}
 \end{align}
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org0583848}]{Removal of Nuisance Effect}
+\begin{frame}[label={sec:orgdba6859}]{Removal of Nuisance Effect}
 \begin{block}{First step}
-remove nuisance input \(B\) and estimate pseudo connection \(\lambda\)
+\begin{itemize}
+\item remove nuisance input \(B\) and estimate pseudo connection \(\lambda\)
 \begin{align}
   U_i(t)
   &= \alert{B_i(t)} +
     \sum_{j=1}^{N} \alert{\lambda_{ij}} X_j[t_\Delta].
 \end{align}
+\end{itemize}
 \end{block}
-\centering
-\includegraphics[width=.6\linewidth]{partialgraph}
+\begin{center}
+\includegraphics[width=.5\linewidth]{partialgraph}
+\end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orge8f6fe2}]{Property of Sum of Random Variables}
-\begin{theorem}[]\label{sec:org8fb8c1d}
+
+\begin{frame}[label={sec:orgca6ab31}]{Property of Sum of Random Variables}
+\begin{theorem}[]
 Let \(X\) and \(Y\) be independent random variables.
 For any function \(g\), we have
 \begin{align}
@@ -396,9 +405,9 @@ For any function \(g\), we have
 A special case is discussed in \cite{Hyvaerinen2002}.
 \end{frame}
 
-\begin{frame}[label={sec:org1416356}]{Special Case of Gaussian}
-\begin{corollary}[]\label{sec:org783de79}
-If the function \(g\) is \(\Phi_{\sigma^{2}}\)
+\begin{frame}[label={sec:org4501f95}]{Special Case of Gaussian}
+\begin{corollary}[]%l
+If function \(g\) is \(\Phi_{\sigma^{2}}\)
 and random variable \(X\) is constant value \(x\),
 and probability density function \(f_Y\) is Gaussian
 with mean \(\mathbb{E}[Y]\) and variance \(\tau^{2}\), we have
@@ -408,24 +417,23 @@ with mean \(\mathbb{E}[Y]\) and variance \(\tau^{2}\), we have
 \end{align}
 \end{corollary}
 \begin{center}
-\(\Phi_{\sigma^{2}}\)\hspace{.23\linewidth}
-\(\phi_{\tau^{2}}\)\hspace{.2\linewidth}
-\(\Phi_{\sigma^{2}\!+\!\tau^{2}}\)
-\includegraphics[width=.8\linewidth]{convolution}    
+\(\Phi_{\sigma^{2}}\)\hspace{.29\linewidth}
+\(\phi_{\tau^{2}}\)\hspace{.24\linewidth}
+\(\Phi_{\sigma^{2}\!+\!\tau^{2}}\)\\[0pt]
+\includegraphics[width=.9\linewidth]{convolution}    
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org04047bd}]{Conditinal Expectation of State}
-consider the case of \(X_j[t_{\Delta}]\!=\!1\):
+\begin{frame}[label={sec:orgbe42262}]{Conditinal Expectation of State}
+\begin{itemize}[<+->]
+\item consider the case of \(X_j[t_{\Delta}]\!=\!1\),
 \begin{align}
   U_{i}(t\mid X_j[t_{\Delta}]\!=\!1)
   &= B_i(t) + \lambda_{ij}X_j[t_{\Delta}] +
     \sum_{k \neq j}\lambda_{ik}X_k[t_{\Delta}]\\
   &= \lambda_{ij} + C_{ij}(t\mid X_j[t_{\Delta}]\!=\!1\bigr).
 \end{align}
-
-\pause
-apply the corollary for calculating conditional expectation:
+\item let us apply the corollary for calculating conditional expectation
 \begin{align}
   \mathbb{E}\bigl[X_i(t) \mid X_j[t_{\Delta}]\!=\!1\bigr]
   &= \mathbb{E}\bigl[\Phi_{\sigma^2}\bigl(U_{i}(t\mid X_j[t_{\Delta}]\!=\!1)\bigr)\bigr]\\
@@ -436,16 +444,17 @@ apply the corollary for calculating conditional expectation:
 \end{align}
 where we assume \(C_{ij}\sim\mathcal{N}(\bar{C}_{ij},\tau^{2})\)
 and \(\rho^2 = \sigma^2+\tau^2\).
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org054d198}]{Conditional Expectation of Internal State}
-for binary random variables, \%the following holds:
+\begin{frame}[label={sec:org3ace738}]{Conditional Expectation of Internal State}
+\begin{itemize}[<+->]
+\item for binary random variables, the following holds
 \begin{align}
   \mathbb{E}\bigl[X_i(t) \mid X_j[t_{\Delta}]\!=\!1\bigr]
   = \Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1).
 \end{align}
-holds,
-therefore, obtain:
+\item therefore, we obtain
 \begin{align}
   \Phi_{\rho^2}(\lambda_{ij} + \bar{C}_{ij})
   &= \Pr(X_i(t)=1 \mid X_j[t_{\Delta}]\!=\!1),\\
@@ -453,10 +462,12 @@ therefore, obtain:
   \lambda_{ij} + \bar{C}_{ij}
   &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)\bigr).
 \end{align}
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orge09b540}]{Difference of Conditional Expectation}
-consider the both cases of \(X_j[t_{\Delta}]=1\) and \(X_j[t_{\Delta}]=0\):
+\begin{frame}[label={sec:org073d524}]{Difference of Conditional Expectation}
+\begin{itemize}
+\item consider the both cases of \(X_j[t_{\Delta}]=1\) and \(X_j[t_{\Delta}]=0\),
 \begin{align}
   U_{i}(t\mid X_j[t_{\Delta}]\!=\!1)
   &= \lambda_{ij} +
@@ -465,6 +476,7 @@ consider the both cases of \(X_j[t_{\Delta}]=1\) and \(X_j[t_{\Delta}]=0\):
   &= \phantom{\lambda_{ij} + {}}
     C_{ij}(t\mid X_j[t_{\Delta}]\!=\!0).
 \end{align}
+\end{itemize}
 \pause
 \begin{alertblock}{Assumption}
 \begin{equation}
@@ -474,18 +486,21 @@ consider the both cases of \(X_j[t_{\Delta}]=1\) and \(X_j[t_{\Delta}]=0\):
 \end{equation}
 \end{alertblock}
 \pause
-then obtain:
+\begin{itemize}
+\item then we obtain
 \begin{align}
   \lambda_{ij} + \bar{C}_{ij}
   &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)\bigr),\\
-  %%\phantom{\lambda_{ij} +}
+  %% \phantom{\lambda_{ij} +}
   \bar{C}_{ij}
   &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)\bigr).
 \end{align}
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgb208fd9}]{Estimation of Pseudo Connection}
-estimator of pseudo connection:
+\begin{frame}[label={sec:org9dcbabc}]{Estimation of Pseudo Connection}
+\begin{itemize}
+\item estimator of pseudo connection
 \begin{align}
   \lambda_{ij}
   &=\rho\bigl\{\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)\bigr)\\
@@ -493,43 +508,49 @@ estimator of pseudo connection:
     - \Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)\bigr)
     \bigr\}.
 \end{align}
-empirical estimates of conditional probability:
+\item empirical estimates of conditional probability
 \begin{align}
   \Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!1)
   &= \frac{1}{Z}\sum_{t} X_i(t \mid X_j[t_\Delta]\!=\!1),\\
   \Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)
   &= \frac{1}{Z'}\sum_{t} X_i(t \mid X_j[t_\Delta]\!=\!0).
 \end{align}
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org87ce03b}]{Decomposition of Pseudo Connection}
+\begin{frame}[label={sec:org3d4cb23}]{Decomposition of Pseudo Connection}
 \begin{block}{Second step}
-decompose pseudo connections \(\lambda\)
-with direct connections \(w\):\\[0pt]
+\begin{itemize}
+\item decompose pseudo connections \(\lambda\)
+with direct connections \(w\)
+\end{itemize}
 \centering
 \includegraphics[width=.9\linewidth]{decomposition}
 \end{block}
 \pause
-consider an expansion with appropriate \(\delta,\delta'\) (delay time)
+\begin{itemize}
+\item consider an expansion with appropriate \(\delta,\delta'\) (delay time)
 \begin{align}
   \lambda_{ij}
   &=w_{ij}\\
-  %&+\sum_{k}w_{ik}\alert{\Pr(X_k(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1)}\\
-  &+\sum_{k}\!w_{ik}\alert{\Pr(X_k(t\!-\!\delta)\!=\!1 \mid X_j(t\!-\!\delta')\!=\!1)}\\
-  % &+\sum_{k,l}\!w_{ik}\alert{\Pr(X_k(t)=1 \mid X_l(t-{\delta})=1)}\\
-  % &\phantom{+\sum_{k,l}\!w_{ik}}\times
-  %   \alert{\Pr(X_l(t-\delta)=1 \mid X_j(t-2\delta)=1)}\\
-  &+\text{(higher order terms)}.
+  % &+\sum_{k}w_{ik}\alert{\Pr(X_k(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1)}\\
+&+\sum_{k}\!w_{ik}\alert{\Pr(X_k(t\!-\!\delta)\!=\!1 \mid X_j(t\!-\!\delta')\!=\!1)}\\
+% &+\sum_{k,l}\!w_{ik}\alert{\Pr(X_k(t)=1 \mid X_l(t-{\delta})=1)}\\
+% &\phantom{+\sum_{k,l}\!w_{ik}}\times
+%   \alert{\Pr(X_l(t-\delta)=1 \mid X_j(t-2\delta)=1)}\\
+&+\text{(higher order terms)}.
 \end{align}
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgd1daad7}]{Decomposition}
-introducing a virtual probability with an appropriate interval \(t_{\delta}\)
+\begin{frame}[label={sec:org734c017}]{Decomposition}
+\begin{itemize}
+\item introduce a virtual probability with an appropriate interval \(t_{\delta}\)
 \begin{equation}
   \theta_{ij}
-  = \Pr(X_i(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1),
+  = \Pr(X_i(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1).
 \end{equation}
-obtain an expansion of \(\lambda\) as:
+\item we obtain an expansion of \(\lambda\) as
 \begin{align}
   \lambda_{ij}
   &=w_{ij}+
@@ -538,8 +559,7 @@ obtain an expansion of \(\lambda\) as:
     \sum_{k,l,m}\!w_{ik}\theta_{kl}\theta_{lm}\theta_{mj}+
     \dotsb.
 \end{align}
-\pause
-this expression gives a simple matrix form:
+\item this expression gives a simple matrix form
 \begin{align}
   \Lambda
   &= W(I+\Theta+\Theta^{2}+\Theta^{3}+\cdots)
@@ -547,20 +567,23 @@ this expression gives a simple matrix form:
   &= W(I-\Theta)^{-1},
 \end{align}
 where \(W=(w_{ij})\) and \(\Theta=(\theta_{ij})\).
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgb02549a}]{Estimation of Virtual Probability}
-relation between \(\theta\) and \(w\):
+\begin{frame}[label={sec:org4c93b18}]{Estimation of Virtual Probability}
+\begin{itemize}
+\item relation between \(\theta\) and \(w\):
 \begin{align}
   \theta_{ij}
   &= \Pr(X_i(t)\!=\!1 \mid X_j[t_{\delta}]\!=\!1)
   &&\text{\triangleright\,use expectation form}\\
   &= \mathbb{E}\bigl[\Phi_{\sigma^{2}}(w_{ij}+C_{ij}')\bigr]
   &&\text{\triangleright\,\(t_{\delta}\) is small enough}\\
-     %to exclude undirect effect.
+  % to exclude undirect effect.
   &= \Phi_{\rho^2}\bigl(w_{ij}+\mathbb{E}[C'_{ij}]\bigr)
   &&\text{\triangleright\,by the corollary}
 \end{align}
+\end{itemize}
 \pause
 \begin{alertblock}{Assumption}
 \begin{equation}
@@ -569,22 +592,26 @@ relation between \(\theta\) and \(w\):
 \end{alertblock}
 \pause
 
-calculate \(\theta\) by using \(w\) as:
+\begin{itemize}
+\item calculate \(\theta\) by using \(w\) as
 \begin{align}
   \theta_{ij}
   &=\Phi_{\rho^2}(w_{ij}+\bar{C}_{ij}),\\
-    %\mathbb{E}[C'_{ij}]
+  % \mathbb{E}[C'_{ij}]
   \bar{C}_{ij}
   &= \rho\cdot\Phi^{-1}_{1}\bigl(\Pr(X_i(t)\!=\!1 \mid X_j[t_{\Delta}]\!=\!0)\bigr).
 \end{align}
+\end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org1505466}]{Estimation of Neuron Type}
+\begin{frame}[label={sec:org7dad67f}]{Estimation of Neuron Type}
 \begin{block}{Third step}
-estimate types of neurons consistent with data:
+\begin{itemize}
+\item estimate types of neurons consistent with data:
 \begin{itemize}
 \item excitatory neurons - \alert{positive connections only}
 \item inhibitory neurons - \alert{negative connections only}
+\end{itemize}
 \end{itemize}
 \end{block}
 \pause
@@ -595,14 +622,13 @@ estimate types of neurons consistent with data:
 \visible<3->{\includegraphics[width=.8\linewidth]{emalgorithm}\\}
 \end{column}
 \begin{column}{0.5\columnwidth}
-treated as hidden variables \(\boldsymbol{z}\in\{0,1\}^{N}\):
+treated as hidden variables \(\boldsymbol{z}\in\{0,1\}^{N}\)
 \begin{equation}
   \Pr(\text{Data}\mid W,\boldsymbol{z})
   \Leftrightarrow
   \Pr(\boldsymbol{z}\mid\text{Data},W)
 \end{equation}
-\end{column}
-\end{columns}
+
 \pause
 \smallskip
 use em algorithm
@@ -612,64 +638,66 @@ with approximations:
 \item factorial model in data manifold
 \item Gibbs sampling
 \end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org22cd685}]{}
-\footnotesize
-\alert{Proposed Algorithm:}
+\begin{frame}[label={sec:org491369d}]{Proposed Algorithm}
+\small
 \begin{algorithmic}[1]
-  \State{Input:\;$\Lambda, \bar{C}, \boldsymbol{z}$}
-  \Function{estimateW}{$\Lambda, \bar{C}, \boldsymbol{z}$}
+  \State{Input:\;\(\Lambda, \bar{C}, \boldsymbol{z}\)}
+  \Function{estimateW}{\(\Lambda, \bar{C}, \boldsymbol{z}\)}
   \State{Initialization:\;
-    $\Theta^{(1)}\gets[0,1]^{N\times N}$,
-    $\Lambda^{(1)}\gets\Lambda$}
-  \For{$\tau\gets1,T$}
-  \State{$W^{(\tau+1)}\gets
-    {\Lambda}^{(\tau)}(I-\Theta^{(\tau)})$}
-  \For{$i\gets1,N$}
-  \For{$j\gets1,N$}
+    \(\Theta^{(1)}\gets[0,1]^{N\times N}\),
+    \(\Lambda^{(1)}\gets\Lambda\)}
+  \For{\(\tau\gets1,T\)}
+  \State{\(W^{(\tau+1)}\gets
+    {\Lambda}^{(\tau)}(I-\Theta^{(\tau)})\)}
+  \For{\(i\gets1,N\)}
+  \For{\(j\gets1,N\)}
   \State{
-    $[\hat{W}(\boldsymbol{z})^{(\tau+1)}]_{ij}
+    \([\hat{W}(\boldsymbol{z})^{(\tau+1)}]_{ij}
     \gets
     \begin{cases}
       z_{j}[W^{(\tau+1)}]_{ij},&[W^{(\tau+1)}]_{ij} > 0\\
       (1-z_{j})[W^{(\tau+1)}]_{ij},&[W^{(\tau+1)}]_{ij} < 0
     \end{cases}
-    $
+    \)
   }
   \EndFor
   \EndFor
-  \State{$\bigl[\Theta^{(\tau+1)}\bigr]_{ij}\gets
-    \Phi_1\Bigl([\hat{W}(\boldsymbol{z})^{(\tau+1)}]_{ij}+\bar{C}_{ij})\Bigr)$}
-  \State{$\mathrm{diag}(\boldsymbol{\Theta}^{(\tau+1)})\gets 0$}
+  \State{\(\bigl[\Theta^{(\tau+1)}\bigr]_{ij}\gets
+    \Phi_1\Bigl([\hat{W}(\boldsymbol{z})^{(\tau+1)}]_{ij}+\bar{C}_{ij})\Bigr)\)}
+  \State{\(\mathrm{diag}(\boldsymbol{\Theta}^{(\tau+1)})\gets 0\)}
   \Comment{update diagonal elements}
-  \State{$\Lambda^{(\tau+1)}\gets\Lambda^{(\tau)}$}
-  \State{$\mathrm{diag}\bigl(\Lambda^{(\tau+1)}\bigr)\gets
-    \mathrm{diag}\bigl(\Lambda^{(\tau)}\Theta^{(\tau+1)}\bigr)$}
+  \State{\(\Lambda^{(\tau+1)}\gets\Lambda^{(\tau)}\)}
+  \State{\(\mathrm{diag}\bigl(\Lambda^{(\tau+1)}\bigr)\gets
+    \mathrm{diag}\bigl(\Lambda^{(\tau)}\Theta^{(\tau+1)}\bigr)\)}
   \Comment{update diagonal elements}
   \EndFor
   \EndFunction
-  \State{Output:\;$\hat{W}(\boldsymbol{z})$}
+  \State{Output:\;\(\hat{W}(\boldsymbol{z})\)}
 \end{algorithmic}
 \end{frame}
 
+
 \section{Numerical Examples}
-\label{sec:orgdb0c21a}
+\label{sec:org6d55f44}
 \subsection{synthetic data analysis}
-\label{sec:orga7797ba}
-\begin{frame}[label={sec:org2dbc036}]{Synthetic Data Analysis}
+\label{sec:org877c9fc}
+\begin{frame}[label={sec:org5a20241}]{Synthetic Data Analysis}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
-\includegraphics[width=.7\linewidth]{experiment}
+\includegraphics[width=.68\linewidth]{experiment}
 \end{column}
 \begin{column}{0.5\columnwidth}
 Izhikevich's neuron model\\[0pt]
 \parencite{Izhikevich2003}
 \begin{itemize}
 \item \(N=33\) out of \(100\) neurons
-\item excitatory:inhibitory = 80$\backslash$%:20$\backslash$%
-\item \(w_{ij}\sim\texttt{Unif}[-10,10]\)
+\item excitatory:inhibitory = 80\%:20\%
+\item \(w_{ij}\sim\mathrm{Unif}[-10,10]\)
 \item \(\#\{w_{\cdot i}\}\leq 10\)
 \end{itemize}
 \centering
@@ -677,17 +705,17 @@ Izhikevich's neuron model\\[0pt]
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org222c81b}]{Estimation Result}
+\begin{frame}[label={sec:org7976ed3}]{Estimation Result}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
 true\\[0pt]
-\includegraphics[width=.8\linewidth]{graph_cor}
+\includegraphics[width=.75\linewidth]{graph_cor}
 \end{column}
 \begin{column}{0.5\columnwidth}
 \centering
 estimated\\[0pt]
-\includegraphics[width=.8\linewidth]{graph_est}
+\includegraphics[width=.75\linewidth]{graph_est}
 \end{column}
 \end{columns}
 \begin{alertblock}{remarks}
@@ -698,17 +726,17 @@ estimated\\[0pt]
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org8d99f00}]{Performance}
+\begin{frame}[label={sec:orgc3068b3}]{Performance}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
 sensitivity
-\includegraphics[width=.8\linewidth]{fig_100net1}
+\includegraphics[width=.75\linewidth]{fig_100net1}
 \end{column}
 \begin{column}{0.5\columnwidth}
 \centering
 Kendall coefficient
-\includegraphics[width=.8\linewidth]{fig_100net2}
+\includegraphics[width=.75\linewidth]{fig_100net2}
 \end{column}
 \end{columns}
 \begin{alertblock}{remarks}
@@ -720,17 +748,17 @@ is estimated with sufficient accuracy
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org9edb220}]{Sensitivity vs Interval Size}
+\begin{frame}[label={sec:org3813442}]{Sensitivity vs Interval Size}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
 sensitivity
-\includegraphics[width=.8\linewidth]{fig_100net}
+\includegraphics[width=.75\linewidth]{fig_100net}
 \end{column}
 \begin{column}{0.5\columnwidth}
 \centering
 spike interval
-\includegraphics[width=.8\linewidth]{isi}
+\includegraphics[width=.95\linewidth]{isi}
 \end{column}
 \end{columns}
 \begin{alertblock}{remark}
@@ -741,9 +769,9 @@ correlation interval
 \end{alertblock}
 \end{frame}
 \subsection{real data analysis}
-\label{sec:org6ab3cf8}
-\begin{frame}[label={sec:org084a7c1}]{Real Data Analysis}
-memory trace replay:
+\label{sec:orgfea8025}
+\begin{frame}[label={sec:orgb921edc}]{Real Data Analysis}
+memory trace replay
 \parencites{WilsonMcNaughton1994,TatsunoLipaMcNaughton2006}
 
 \begin{itemize}
@@ -759,7 +787,7 @@ plays an important role in the consolidation process of memory''
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orge104712}]{Estimation Result}
+\begin{frame}[label={sec:orgce21946}]{Estimation Result}
 \begin{columns}
 \begin{column}{0.33\columnwidth}
 \centering
@@ -787,8 +815,8 @@ post-task period (e.g. 8,11,12,20)
 \end{frame}
 
 \section{Conclusion}
-\label{sec:org2d899cb}
-\begin{frame}[label={sec:orgcc8d5a3}]{Concluding Remarks}
+\label{sec:orgac72184}
+\begin{frame}[label={sec:orgcc03b7e}]{Concluding Remarks}
 we consider an approach to solve the following problems
 \begin{itemize}
 \item pseudo correlation caused by higher-order effect
