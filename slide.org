@@ -108,7 +108,7 @@ activities of individual neurons
 :END:
 #+begin_export latex
 \centering
-multi-variate stochastic process\\[5pt]
+multi-variate point process\\[5pt]
 \rotatebox{90}{\hspace*{.2\linewidth}neurons}
 \includegraphics[width=.9\linewidth]{spiketrain}\\
 times

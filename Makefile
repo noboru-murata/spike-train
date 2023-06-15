@@ -3,8 +3,8 @@
 NAME 	= $(shell head -1 README.org | tr -d '*[:space:]')
 # NAME 	= online-learning
 ORG	= slide.org
-TEX	= $(SRC:%.org=%.tex)
-PDF	= $(SRC:%.org=%.pdf)
+TEX	= $(ORG:%.org=%.tex)
+PDF	= $(ORG:%.org=%.pdf)
 SUB	= $(shell ls main/*.tex)
 GIF 	= thumbnail.gif
 
