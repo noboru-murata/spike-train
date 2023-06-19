@@ -36,6 +36,7 @@
 :END:
 
 * Introduction
+** motivated problem
 *** Background
 # plasticity of brain: inportant function
 # survive ever-changing world environment
@@ -193,10 +194,13 @@ typical methods for analysis
 # e.g. SICS can deal with hundreds of node,
 # but only consider undirected
 
+** issues to be solved
 *** Issues to Be Solved
 # in analysis, we have some issues to be considered/solved
 # our main consern is pseudo correlation problem
-- pseudo correlation caused by higher-order effects
+- pseudo correlation caused by
+  - higher-order effects
+  - dynamical systems
 - influence from unobserved neurons
 - directed excitatory/inhibitory connections
 
@@ -289,7 +293,8 @@ statistics for analyzing time series
 *** Our Contribution
 a mathematical framework for treating
 # following one major and two minor pnroblems
-- pseudo correlation caused by higher-order effects
+- pseudo correlation caused by 
+  higher-order effects and dynamical systems
   # :\\
   # graph expansion
 - influence from unobserved neurons
@@ -309,6 +314,7 @@ solve those problems with simple mathematical tricks
 
 
 * Problem Formulation
+** mathematical model
 *** Notations
 - indeces
   - \(i\in\{1,2,\dotsc,N\}\):
@@ -481,6 +487,7 @@ internal state
   \end{align}
   # probit model
 
+** estimation method
 *** Removal of Nuisance Effect
 **** First step                                                  :B_block:
 :PROPERTIES:
@@ -499,7 +506,6 @@ internal state
 #+begin_center
 \includegraphics[width=.5\linewidth]{partialgraph}
 #+end_center
-
 
 *** Property of Sum of Random Variables
 ****                                                           :B_theorem:
@@ -865,9 +871,8 @@ Kendall coefficient
 :BEAMER_env: alertblock
 :END:
 - estimation accuracy gets better if neuron types are given
-- order of weights %strength
-  is estimated with sufficient accuracy
-
+- order of weights is estimated with sufficient accuracy
+# weight -> strength
 *** Sensitivity vs Interval Size
 **** left                                                          :BMCOL:
 :PROPERTIES:
