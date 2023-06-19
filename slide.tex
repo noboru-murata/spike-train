@@ -1,4 +1,4 @@
-% Created 2023-06-19 Mon 12:39
+% Created 2023-06-19 Mon 14:52
 % Intended LaTeX compiler: pdflatex
 \documentclass[fleqn,aspectratio=1610]{beamer}
 \author{Noboru Murata}
@@ -26,10 +26,10 @@
 
 
 \section{Introduction}
-\label{sec:orgad5538c}
+\label{sec:org648f585}
 \subsection{motivated problem}
-\label{sec:org84cdec3}
-\begin{frame}[label={sec:orgad5d0a9}]{Background}
+\label{sec:org1c6d786}
+\begin{frame}[label={sec:org0231462}]{Background}
 \begin{itemize}
 \item estimating neural connections
 
@@ -66,7 +66,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orga9ea4aa}]{Multi-Electrode Recording}
+\begin{frame}[label={sec:org34fd012}]{Multi-Electrode Recording}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \includegraphics[width=\linewidth]{electrode}
@@ -89,7 +89,7 @@ activities of individual neurons
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9341ed7}]{Spike Trains}
+\begin{frame}[label={sec:org80cc392}]{Spike Trains}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \centering
@@ -113,7 +113,7 @@ information of neural interactions
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orge6d5ce6}]{Graph Structure Inference}
+\begin{frame}[label={sec:orgc4f9884}]{Graph Structure Inference}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{center}
@@ -139,7 +139,7 @@ from binary time series at nodes
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org7b65202}]{Prior Works}
+\begin{frame}[label={sec:orgbcaaa37}]{Prior Works}
 typical methods for analysis
 \begin{itemize}
 \item pair-wise:
@@ -171,8 +171,8 @@ typical methods for analysis
 \end{frame}
 
 \subsection{issues to be solved}
-\label{sec:orga1c5311}
-\begin{frame}[label={sec:orgd66ecb3}]{Issues to Be Solved}
+\label{sec:org2ed6258}
+\begin{frame}[label={sec:orgb5483e8}]{Issues to Be Solved}
 \begin{itemize}
 \item pseudo correlation caused by
 \begin{itemize}
@@ -184,7 +184,7 @@ typical methods for analysis
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orga37f925}]{Pseudo Correlation}
+\begin{frame}[label={sec:orgcfae093}]{Pseudo Correlation}
 correlation coefficient:
 statistics for analyzing relation of two random variables
 \medskip
@@ -215,7 +215,7 @@ a common problem in complex network analysis
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org3e1977e}]{Delayed Pseudo-Correlation}
+\begin{frame}[label={sec:org1287d2d}]{Delayed Pseudo-Correlation}
 delayed correlation coefficient:
 statistics for analyzing time series
 
@@ -246,7 +246,8 @@ statistics for analyzing time series
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb935d7f}]{Our Contribution}
+\begin{frame}[label={sec:org138d0f5}]{Our Contribution}
+\nocite{Iwasaki_etal2018}
 a mathematical framework for treating
 
 \begin{itemize}
@@ -265,10 +266,10 @@ solve those problems with simple mathematical tricks
 
 
 \section{Problem Formulation}
-\label{sec:org9de027e}
+\label{sec:org4de4c08}
 \subsection{mathematical model}
-\label{sec:orge11b01d}
-\begin{frame}[label={sec:orge41df7f}]{Notations}
+\label{sec:org2a8d085}
+\begin{frame}[label={sec:org42567d6}]{Notations}
 \begin{itemize}
 \item indeces
 \begin{itemize}
@@ -298,7 +299,7 @@ pseudo connection from neuron \(j\) to neuron \(i\)
 \end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org3836cf9}]{Internal State}
+\begin{frame}[label={sec:orgbb0ee10}]{Internal State}
 weighted sum of inputs from unobserved/observed neurons
 \begin{columns}
 \begin{column}{0.7\columnwidth}
@@ -326,7 +327,7 @@ weighted sum of inputs from unobserved/observed neurons
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org2d3272f}]{Neuron Firing}
+\begin{frame}[label={sec:org61c435b}]{Neuron Firing}
 stochastic dependency on internal state:
 \begin{columns}
 \begin{column}{0.65\columnwidth}
@@ -360,7 +361,7 @@ internal state
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:orgb1a8274}]{Model Description}
+\begin{frame}[label={sec:org56277c2}]{Model Description}
 \begin{itemize}
 \item internal state
 \begin{align}
@@ -385,8 +386,8 @@ internal state
 \end{frame}
 
 \subsection{estimation method}
-\label{sec:org3c78430}
-\begin{frame}[label={sec:orga8a99e4}]{Removal of Nuisance Effect}
+\label{sec:orge92ec09}
+\begin{frame}[label={sec:org411550e}]{Removal of Nuisance Effect}
 \begin{block}{First step}
 \begin{itemize}
 \item remove nuisance input \(B\) and estimate pseudo connection \(\lambda\)
@@ -402,8 +403,8 @@ internal state
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgf03922d}]{Property of Sum of Random Variables}
-\begin{theorem}[]\label{sec:orgce2353b}
+\begin{frame}[label={sec:org50c4f3d}]{Property of Sum of Random Variables}
+\begin{theorem}[]\label{sec:orgc36a9a1}
 Let \(X\) and \(Y\) be independent random variables.
 For any function \(g\), we have
 \begin{align}
@@ -417,8 +418,8 @@ For any function \(g\), we have
 A special case is discussed in \cite{Hyvaerinen2002}.
 \end{frame}
 
-\begin{frame}[label={sec:org99dc8fc}]{Special Case of Gaussian}
-\begin{corollary}[]\label{sec:orge561c7e}
+\begin{frame}[label={sec:org305d9b5}]{Special Case of Gaussian}
+\begin{corollary}[]\label{sec:org305ae38}
 If function \(g\) is \(\Phi_{\sigma^{2}}\)
 and random variable \(X\) is constant value \(x\),
 and probability density function \(f_Y\) is Gaussian
@@ -436,7 +437,7 @@ with mean \(\mathbb{E}[Y]\) and variance \(\tau^{2}\), we have
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgbdac24f}]{Conditinal Expectation of State}
+\begin{frame}[label={sec:org64f7dff}]{Conditinal Expectation of State}
 \begin{itemize}[<+->]
 \item consider the case of \(X_j[t_{\Delta}]\!=\!1\),
 \begin{align}
@@ -459,7 +460,7 @@ and \(\rho^2 = \sigma^2+\tau^2\).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org14ba647}]{Conditional Expectation of Internal State}
+\begin{frame}[label={sec:org71cd448}]{Conditional Expectation of Internal State}
 \begin{itemize}[<+->]
 \item for binary random variables, the following holds
 \begin{align}
@@ -477,7 +478,7 @@ and \(\rho^2 = \sigma^2+\tau^2\).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org43915d6}]{Difference of Conditional Expectation}
+\begin{frame}[label={sec:orge9900e7}]{Difference of Conditional Expectation}
 \begin{itemize}
 \item consider the both cases of \(X_j[t_{\Delta}]=1\) and \(X_j[t_{\Delta}]=0\),
 \begin{align}
@@ -510,7 +511,7 @@ and \(\rho^2 = \sigma^2+\tau^2\).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgee6a9f3}]{Estimation of Pseudo Connection}
+\begin{frame}[label={sec:org01db354}]{Estimation of Pseudo Connection}
 \begin{itemize}
 \item estimator of pseudo connection
 \begin{align}
@@ -530,7 +531,7 @@ and \(\rho^2 = \sigma^2+\tau^2\).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgdde1ee4}]{Decomposition of Pseudo Connection}
+\begin{frame}[label={sec:org863ceb1}]{Decomposition of Pseudo Connection}
 \begin{block}{Second step}
 \begin{itemize}
 \item decompose pseudo connections \(\lambda\)
@@ -555,7 +556,7 @@ with direct connections \(w\)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgbab3520}]{Decomposition}
+\begin{frame}[label={sec:orga22fbec}]{Decomposition}
 \begin{itemize}
 \item introduce a virtual probability with an appropriate interval \(t_{\delta}\)
 \begin{equation}
@@ -582,7 +583,7 @@ where \(W=(w_{ij})\) and \(\Theta=(\theta_{ij})\).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgfa544c5}]{Estimation of Virtual Probability}
+\begin{frame}[label={sec:org02124a9}]{Estimation of Virtual Probability}
 \begin{itemize}
 \item relation between \(\theta\) and \(w\):
 \begin{align}
@@ -616,7 +617,7 @@ where \(W=(w_{ij})\) and \(\Theta=(\theta_{ij})\).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org5627d79}]{Estimation of Neuron Type}
+\begin{frame}[label={sec:orgcfb742f}]{Estimation of Neuron Type}
 \begin{block}{Third step}
 \begin{itemize}
 \item estimate types of neurons consistent with data:
@@ -654,7 +655,7 @@ with approximations:
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orga6d4d19}]{Proposed Algorithm}
+\begin{frame}[label={sec:orgc4fa121}]{Proposed Algorithm}
 \small
 \begin{algorithmic}[1]
   \State{Input:\;\(\Lambda, \bar{C}, \boldsymbol{z}\)}
@@ -694,10 +695,10 @@ with approximations:
 
 
 \section{Numerical Examples}
-\label{sec:org9a3db70}
+\label{sec:org1247098}
 \subsection{synthetic data analysis}
-\label{sec:orgcb548e3}
-\begin{frame}[label={sec:org750a8a4}]{Synthetic Data Analysis}
+\label{sec:orgf0e9518}
+\begin{frame}[label={sec:org1776c86}]{Synthetic Data Analysis}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
@@ -717,7 +718,7 @@ Izhikevich's neuron model\\[0pt]
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org77fd14f}]{Estimation Result}
+\begin{frame}[label={sec:orge083a22}]{Estimation Result}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
@@ -738,7 +739,7 @@ estimated\\[0pt]
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org49fa4c1}]{Performance}
+\begin{frame}[label={sec:org9fb2779}]{Performance}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
@@ -758,7 +759,7 @@ Kendall coefficient
 \end{itemize}
 \end{alertblock}
 \end{frame}
-\begin{frame}[label={sec:org1fac40a}]{Sensitivity vs Interval Size}
+\begin{frame}[label={sec:orga2d6faa}]{Sensitivity vs Interval Size}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \centering
@@ -779,8 +780,8 @@ correlation interval
 \end{alertblock}
 \end{frame}
 \subsection{real data analysis}
-\label{sec:org8064bf4}
-\begin{frame}[label={sec:org74d7fbe}]{Real Data Analysis}
+\label{sec:org2a4bfac}
+\begin{frame}[label={sec:orgefa45e8}]{Real Data Analysis}
 memory trace replay
 \parencites{WilsonMcNaughton1994,TatsunoLipaMcNaughton2006}
 
@@ -797,7 +798,7 @@ plays an important role in the consolidation process of memory''
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org42415ca}]{Estimation Result}
+\begin{frame}[label={sec:org3e2425f}]{Estimation Result}
 \begin{columns}
 \begin{column}{0.33\columnwidth}
 \centering
@@ -825,8 +826,8 @@ post-task period (e.g. 8,11,12,20)
 \end{frame}
 
 \section{Conclusion}
-\label{sec:orga1bd4d7}
-\begin{frame}[label={sec:org12307c4}]{Concluding Remarks}
+\label{sec:orgced034e}
+\begin{frame}[label={sec:org318d93c}]{Concluding Remarks}
 we consider an approach to solve the following problems
 \begin{itemize}
 \item pseudo correlation caused by higher-order effect

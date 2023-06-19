@@ -291,6 +291,7 @@ statistics for analyzing time series
   - \xmark :: not explicitly considered
 
 *** Our Contribution
+\nocite{Iwasaki_etal2018}
 a mathematical framework for treating
 # following one major and two minor pnroblems
 - pseudo correlation caused by 
